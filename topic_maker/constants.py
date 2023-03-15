@@ -72,4 +72,4 @@ VALUES_TEMPLATE = {
 'Screenshots': '$screenshots',
 }
 
-VERSION = 'v1.0.0'
+VERSION = 'v1.0.1'

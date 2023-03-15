@@ -17,6 +17,7 @@ Easily create a topic with iMDB/MyDramaList infos using a template
 - Fill the 'Movie or TV Name' with your wanted search (It can be a movie / tv name but also a iMDB ID)
 - If you didn't search for an iMDB ID, it will show a window with the search results
 - Double click on your prefered result to continue
+- If you check for MyDramaList, you will get another search results window based on the iMDB title / year
 - It will now ask for a file to get the mediainfo
 - It will produces a new txt file with the topic created
 
@@ -54,7 +55,7 @@ or return None if not found
 | $thumbnail_mdl          | A link to the thumbnail.
 | $media_type_mdl         | Drama or movie.
 | $url_mdl                | The url that was used for scraping the data.
-| $ratings_mdl            | Rating of the movie..
+| $ratings_mdl            | Rating of the movie.
 | $plot_mdl               | Short plot of the movie / drama.
 | $casts_mdl              | Actors playing in the movie / drama.
 | $native_title_mdl       | Native language title.
@@ -192,7 +193,7 @@ pip install pyinstaller\dist\pyinstaller-5.8.0.tar.gz
 
 Command used to compile the executable:
 ```
-pyinstaller --clean --noconfirm --onefile --windowed --name "Topic Maker v1.0.0" --icon "topic_maker/favicon.ico" --add-data "topic_maker/config.py;." --add-data "topic_maker/constants.py;." --add-data "topic_maker/exceptions.py;." --add-data "topic_maker/omdb_api_fetcher.py;." --add-data "topic_maker/template.py;." --add-data "topic_maker/favicon.ico;." --collect-data "sv_ttk" "topic_maker/main.py"
+pyinstaller --clean --noconfirm --onefile --windowed --name "Topic Maker v1.0.1" --icon "topic_maker/favicon.ico" --add-data "topic_maker/config.py;." --add-data "topic_maker/constants.py;." --add-data "topic_maker/exceptions.py;." --add-data "topic_maker/omdb_api_fetcher.py;." --add-data "topic_maker/template.py;." --add-data "topic_maker/favicon.ico;." --collect-data "sv_ttk" "topic_maker/main.py"
 ```
 ## Created using
 * [Python](https://www.python.org/)
@@ -206,13 +207,13 @@ pyinstaller --clean --noconfirm --onefile --windowed --name "Topic Maker v1.0.0"
 * [Icon created by Yogi Aprelliyanto](https://www.flaticon.com/free-icon/browser_9892390)
 
 ## Virus Scan
-[Virus Total](https://www.virustotal.com/gui/file/36b6d6e7ddc9f1b748b23133f7aec4802460fd413a1e6f1f8747e9b3fd04e656) - 4/69 detected
+[Virus Total](https://www.virustotal.com/gui/file/53784e7746485103169e8182ebe59427d30a99baf9c6c6eb549d68040d35ff6d) - 4/69 detected
 
 All positives detections are false (You can inspect the source code or compile it yourself)
 
 The executable is created with Pyinstaller 5.8.0 with Python 3.11.2
 (Bootloader compiled every release inside a VM, compiled because of the highest numbers of false positives in the release one)
 
-MD5: 209b81ade42eca4cf06c1bbdf0cf8b1a
+MD5: b8bf08403ff0606cf8ce0edaebb16e32
 
-SHA-256: 36b6d6e7ddc9f1b748b23133f7aec4802460fd413a1e6f1f8747e9b3fd04e656
+SHA-256: 53784e7746485103169e8182ebe59427d30a99baf9c6c6eb549d68040d35ff6d

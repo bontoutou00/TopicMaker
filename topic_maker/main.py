@@ -230,49 +230,84 @@ class Application(tk.Frame):
         The user can select one of the results and double-click on it to choose it.
         """
         self.omdb_results_ = tk.Toplevel(self)
-        self.omdb_results_.title("Search Results")
+        self.omdb_results_.title("OMDB Search Results")
         self.omdb_results_.geometry("650x290")
         self.waiting_var = tk.IntVar()
         self.imdb_id_search = tk.StringVar()
         columns = ('title', 'year', 'mediatype')
-        self.tree = ttk.Treeview(self.omdb_results_, columns=columns, show='headings')
-        self.tree.heading('title', text='Title')
-        self.tree.column('title', width=300, anchor=tk.W)
-        self.tree.heading('year', text='Year')
-        self.tree.column('year', width=50, anchor=tk.W)
-        self.tree.heading('mediatype', text='Mediatype')
-        self.tree.column('mediatype', width=50, anchor=tk.W)
-        self.tree.bind('<<TreeviewSelect>>', self.result_selected)
-        self.tree.bind('<Double-Button>', self.choice_result)
-        self.tree.place(x=10.0, y=10.0, width=630, height=270)
+        self.tree_omdb = ttk.Treeview(self.omdb_results_, columns=columns, show='headings')
+        self.tree_omdb.heading('title', text='Title')
+        self.tree_omdb.column('title', width=300, anchor=tk.W)
+        self.tree_omdb.heading('year', text='Year')
+        self.tree_omdb.column('year', width=50, anchor=tk.W)
+        self.tree_omdb.heading('mediatype', text='Mediatype')
+        self.tree_omdb.column('mediatype', width=50, anchor=tk.W)
+        self.tree_omdb.bind('<<TreeviewSelect>>',
+                            lambda event: self.result_selected(search='omdb', tree=self.tree_omdb, event=event))
+        self.tree_omdb.bind('<Double-Button>',
+                            lambda event: self.choice_result(search='omdb', tree=self.tree_omdb, event=event))
+        self.tree_omdb.place(x=10.0, y=10.0, width=630, height=270)
         self.omdb_results_.resizable(False, False)
 
-    def choice_result(self, event):
+    def mdl_results(self):
+        """
+        The omdb_results function creates a new window that displays the results of an OMDB search.\n
+        The user can select one of the results and double-click on it to choose it.
+        """
+        self.mdl_results_ = tk.Toplevel(self)
+        self.mdl_results_.title("MyDramaList Search Results")
+        self.mdl_results_.geometry("650x290")
+        self.waiting_var = tk.IntVar()
+        self.mdl_search = tk.StringVar()
+        columns = ('title', 'mediatype')
+        self.tree_mdl = ttk.Treeview(self.mdl_results_, columns=columns, show='headings')
+        self.tree_mdl.heading('title', text='Title')
+        self.tree_mdl.column('title', width=300, anchor=tk.W)
+        self.tree_mdl.heading('mediatype', text='Mediatype')
+        self.tree_mdl.column('mediatype', width=50, anchor=tk.W)
+        self.tree_mdl.bind('<<TreeviewSelect>>',
+                           lambda event: self.result_selected(search='mdl', tree=self.tree_mdl, event=event))
+        self.tree_mdl.bind('<Double-Button>',
+                           lambda event: self.choice_result(search='mdl', tree=self.tree_mdl, event=event))
+        self.tree_mdl.place(x=10.0, y=10.0, width=630, height=270)
+        self.mdl_results_.resizable(False, False)
+
+    def choice_result(self, search, tree, event):
         """
         The choice_result function is called when the user clicks on a row in the omdb_results window.\n
         It takes the imdbID of that movie and puts it into self.imdb_id_search,\n
         which is then used to search for the movie in question.
         """
-        for selected_item in self.tree.selection():
-            item = self.tree.item(selected_item)
+        for selected_item in tree.selection():
+            item = tree.item(selected_item)
             record = item['values']
-            self.imdb_id_search.set(record[3])
-            self.destroy_window(self.omdb_results_)
+            if search == 'omdb':
+                self.imdb_id_search.set(record[3])
+                self.destroy_window(self.omdb_results_)
+            else:
+                self.mdl_search.set(record[0])
+                self.destroy_window(self.mdl_results_)
 
-    def result_selected(self, event):
+    def result_selected(self, search, tree, event):
         """
         The result_selected function is called when the user right-clicks on a row in the treeview.\n
         It creates a context menu with two options: Copy Link and Open iMDB link. The first option copies\n
         the IMDb URL of the selected movie to clipboard, while the second opens it in your default browser.
         """
-        for selected_item in self.tree.selection():
-            item = self.tree.item(selected_item)
+        for selected_item in tree.selection():
+            item = tree.item(selected_item)
             record = item['values']
             if record:
-                context_menu = tk.Menu(gui.omdb_results_, tearoff=0)
-                context_menu.add_command(label="Copy Link", command=lambda: copy(f'https://www.imdb.com/title/{record[3]}'))
-                context_menu.add_command(label="Open iMDB link", command = lambda: webbrowser.open_new_tab(f'https://www.imdb.com/title/{record[3]}'))
-                self.tree.bind("<Button-3>", lambda event: context_menu.post(event.x_root, event.y_root))
+                if search == 'omdb':
+                    context_menu = tk.Menu(gui.omdb_results_, tearoff=0)
+                    context_menu.add_command(label="Copy Link", command=lambda: copy(f'https://www.imdb.com/title/{record[3]}'))
+                    context_menu.add_command(label="Open iMDB Link", command = lambda: webbrowser.open_new_tab(f'https://www.imdb.com/title/{record[3]}'))
+                    tree.bind("<Button-3>", lambda event: context_menu.post(event.x_root, event.y_root))
+                else:
+                    context_menu = tk.Menu(gui.mdl_results_, tearoff=0)
+                    context_menu.add_command(label="Copy Link", command=lambda: copy(record[2]))
+                    context_menu.add_command(label="Open MyDramaList Link", command = lambda: webbrowser.open_new_tab(record[2]))
+                    tree.bind("<Button-3>", lambda event: context_menu.post(event.x_root, event.y_root))
 
     def destroy_window(self, window):
         """
@@ -392,7 +427,7 @@ class Functions:
             gui.save_config_settings('omdb')
             omdb_api = Config().config.get("SETTINGS", "omdb_api")
         self.omdb_client = Client(omdb_api)
-        self.name = gui.entry_name.get()
+        self.name = gui.entry_name.get().strip()
         imdb_entry = re.search(r'(tt\d{1,})', self.name)
         if self.name == 'Movie or TV Name':
             sys.exit()
@@ -458,7 +493,7 @@ class Functions:
                 self.search_results.append({'title': value['Title'], 'year': value['Year'], 'mediatype': value['Type'], 'imdb_id': value['imdbID']})
             gui.omdb_results()
             for result in self.search_results:
-                gui.tree.insert('', tk.END, values=list(result.values()))
+                gui.tree_omdb.insert('', tk.END, values=list(result.values()))
             gui.wait_variable(gui.waiting_var)
             gui.entry_name.delete(0, tk.END)
             gui.entry_name.insert(tk.END, gui.imdb_id_search.get())
@@ -491,40 +526,55 @@ class Functions:
         gui.entry_year.delete(0, tk.END)
         gui.entry_name.insert(tk.END, self.name)
         gui.entry_year.insert(tk.END, self.year)
+        self.mdl()
 
     def mdl(self):
         """
-        The mdl function searches MyDramaList for the title and year of the movie / drama.\n
-        If a match is found, it returns True and populates self.data_mdl.
+        The mdl function searches MyDramaList for the title and year of the movie / drama.
         """
-        try:
-            req = PyMDL.search(name=self.name, year=self.year)
-            logger.info(f'MyDramaList results: {req}')
-            mdl_dic = req.get(0)
-        except AttributeError:
-            return False
-        else:
-            self.data_mdl = {
-            'title_mdl' : mdl_dic.title,
-            'thumbnail_mdl' :  mdl_dic.thumbnail,
-            'media_type_mdl' :  mdl_dic.type,
-            'url_mdl' :  mdl_dic.url,
-            'ratings_mdl' :  mdl_dic.ratings,
-            'plot_mdl' :  mdl_dic.synopsis,
-            'actors_mdl' : ",".join(mdl_dic.casts),
-            'native_title_mdl' :  mdl_dic.native,
-            'genre_mdl' :  mdl_dic.genre,
-            'runtime_mdl' :  mdl_dic.duration,
-            'country_mdl' :  mdl_dic.country,
-            'aka_mdl' : ",".join(mdl_dic.aka),
-            'director_mdl' :  mdl_dic.director,
-            'writer_mdl' :  mdl_dic.screenwriter,
-            'release_date_mdl' :  mdl_dic.date,
-            #'recommendations_mdl' : ",".join(mdl_dic.reco),
-            #'reviews_mdl' : ",".join(mdl_dic.reviews)
-            }
-            logger.info(self.data_mdl)
-            return True
+        if gui.mdl_var.get() is True:
+            try:
+                mdl_year = re.search(r'(\d{4})', self.year).group(1)
+                self.search_results.clear()
+                resp = PyMDL.search(name=self.name, year=mdl_year, max_results=5)
+                logger.info(f'MyDramaList results: {resp}')
+            except AttributeError:
+                return False
+            else:
+                if resp is not None:
+                    for value in resp.get_all():
+                        self.search_results.append({'title': value.title, 'mediatype': value.type, 'link': value.url})
+                    gui.mdl_results()
+                    for result in self.search_results:
+                        gui.tree_mdl.insert('', tk.END, values=list(result.values()))
+                    gui.wait_variable(gui.waiting_var)
+                    try:
+                        resp = PyMDL.search(name=gui.mdl_search.get())
+                        mdl_dic = resp.get(0)
+                    except AttributeError:
+                        return False
+                    else:
+                        data_mdl = {
+                        'title_mdl' : mdl_dic.title,
+                        'thumbnail_mdl' :  mdl_dic.thumbnail,
+                        'media_type_mdl' :  mdl_dic.type,
+                        'url_mdl' :  mdl_dic.url,
+                        'ratings_mdl' :  mdl_dic.ratings,
+                        'plot_mdl' :  mdl_dic.synopsis,
+                        'actors_mdl' : ",".join(mdl_dic.casts),
+                        'native_title_mdl' :  mdl_dic.native,
+                        'genre_mdl' :  mdl_dic.genre,
+                        'runtime_mdl' :  mdl_dic.duration,
+                        'country_mdl' :  mdl_dic.country,
+                        'aka_mdl' : ",".join(mdl_dic.aka),
+                        'director_mdl' :  mdl_dic.director,
+                        'writer_mdl' :  mdl_dic.screenwriter,
+                        'release_date_mdl' :  mdl_dic.date,
+                        }
+                        logger.info(data_mdl)
+                        self.data.update(data_mdl)
+                else:
+                    self.alert('Error', f'No results for {self.name} ({mdl_year})', 'error')
 
     def media_info(self):
         """
@@ -608,11 +658,7 @@ class Functions:
                 path_without_extension = ".".join(self.file_path.split(".")[:-1])
                 output_join = f'{path_without_extension}-%03d.png'
                 try:
-                    output = subprocess.Popen("ffmpeg -ss 00:02:00 -i "+
-                                            "\"" + str(self.file_path) +
-                                            "\""  + " -vf fps=1/60 -frames:v " + number +
-                                            " -f image2 " +
-                                            "\"" + output_join + "\"",
+                    output = subprocess.Popen(f'ffmpeg -ss 00:02:00 -i "{str(self.file_path)}" -vf fps=1/60 -frames:v {number} -f image2 "{output_join}"',
                                             stdout=subprocess.PIPE,
                                             stderr=subprocess.STDOUT,
                                             universal_newlines=1)
@@ -722,9 +768,6 @@ class Functions:
         if gui.screenshoots_var.get() is True:
             screenshots_links = self.imgbb_screenshot()
             self.data.update({'screenshots': ("".join(screenshots_links) +'\n')})
-        if gui.mdl_var.get() is True:
-            if self.mdl() is True:
-                self.data.update(self.data_mdl)
         imdb_template_res = Templates().complete_template(self.data)
         with open(f"{name}.txt", 'w', encoding="utf8") as file:
             file.write(imdb_template_res)
