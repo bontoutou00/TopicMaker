@@ -1,0 +1,50 @@
+[imdb]{
+  "poster": "$poster",
+  "title": "$title",
+  "year": "$year",
+  "directors": "$director",
+  "stars": "$actors",
+  "ratings": "$imdbrating",
+  "votes": "$imdbvotes",
+  "runTime": "$runtime",
+  "summary": "$plot_full",
+  "shortSummary": "$plot_short",
+  "genre": "$genre",
+  "releaseDate": "$released",
+  "viewerRating": "$rated",
+  "language": "$language",
+  "imdbId": "$imdbid",
+  "mediaType": "$type"
+}[/imdb]
+
+[center][size=200][b][url=$url_mdl]$title_mdl[/url] [/b][/size][/center]
+
+
+
+[center][color=#FF8000][b][size=120]$ratings_mdl/10[/size][/b][/color][/center]
+
+
+
+[center][b][size=120]$genre_mdl[/size][/b][/center]
+
+
+
+[quote][center]$plot_mdl[/center][/quote]
+
+
+[color=#FF8000][b]Title[/b][/color]: $title_mdl
+[color=#FF8000][b]Original Title[/b][/color]: $native_title_mdl
+[color=#FF8000][b]Also Known As[/b][/color]: $aka_mdl
+
+[color=#FF8000][b]Type[/b][/color]: $media_type_mdl
+[color=#FF8000][b]Language[/b][/color]: $language
+[color=#FF8000][b]Runtime[/b][/color]: $runtime_mdl
+
+[color=#FF8000][b]Country[/b][/color]: $country_mdl
+[color=#FF8000][b]Genres[/b][/color]: $genre_mdl
+
+[color=#FF0000]$link_provider (use [url=https://www.base64decode.org/]base64decode[/url]) DECODE TWICE!
+[center][hide][b][url=$link][size=200]$link_provider[/color][/url][/b][/hide][/size][/center]
+
+
+[mediainfo]$mediainfo[/mediainfo]
