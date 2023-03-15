@@ -54,7 +54,7 @@ or return None if not found
 | $thumbnail_mdl          | A link to the thumbnail.
 | $media_type_mdl         | Drama or movie.
 | $url_mdl                | The url that was used for scraping the data.
-| $ratings_mdl            | Rating of the movie..
+| $ratings_mdl            | Rating of the movie.
 | $plot_mdl               | Short plot of the movie / drama.
 | $casts_mdl              | Actors playing in the movie / drama.
 | $native_title_mdl       | Native language title.
