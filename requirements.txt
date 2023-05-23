@@ -5,5 +5,5 @@ PyMDL==1.0.1
 pymediainfo==6.0.1
 pyperclip==1.8.2
 PyYAML==6.0
-requests==2.28.2
+requests==2.31.0
 sv-ttk==2.4
